@@ -22,7 +22,9 @@ h6,
 p {
   margin: 0;
 }
-
+h1 {
+  text-align: center;
+}
 ul,
 ol {
   list-style-type: none;
@@ -30,20 +32,18 @@ ol {
   padding: 0;
 }
 
+img {
+  display: block;
+  width: 100%;
+}
+
 a {
   color: currentColor;
   text-decoration: none;
-}
-
-img {
-  display: block;
-  max-width: 100%;
+  display: inline-block;
 }
 
 button {
   cursor: pointer;
-}
-
-h1 {
-  text-align: center;
+  border: none;
 }

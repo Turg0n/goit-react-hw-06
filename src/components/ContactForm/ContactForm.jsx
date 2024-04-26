@@ -3,12 +3,15 @@ import { useId } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import css from './ContactForm.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../redux/contactsSlice';
 
 const initialValues = {
   name: '',
   number: '',
 };
-const ContactPlan = Yup.object().shape({
+
+const ContactSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, 'Too short!')
     .max(50, 'Too long!')
@@ -18,29 +21,33 @@ const ContactPlan = Yup.object().shape({
       /(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/g,
       'Invalid phone number'
     )
-    .min(3, 'Must be at least 3 characters')
-    .max(50, 'Must be no more than 50 characters')
+    .min(3, 'Must be at least 3 characters long')
+    .max(50, 'Must be no more than 50 characters long')
     .required('Required'),
 });
 
-export default function ContactForm({ addContact }) {
+
+export default function ContactForm() {
   const nameFieldId = useId();
   const numberFieldId = useId();
+  const dispatch = useDispatch();
 
   function handleSubmit(values, actions) {
-    addContact({
-      id: nanoid(),
-      name: values.name,
-      number: values.number,
-    });
+    dispatch(
+      addContact({
+        id: nanoid(),
+        name: values.name,
+        number: values.number,
+      })
+    );
     actions.resetForm();
   }
-  
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={ContactPlan}
+      validationSchema={ContactSchema}
     >
       <Form className={css.contactForm}>
         <div>
@@ -55,6 +62,7 @@ export default function ContactForm({ addContact }) {
           />
           <ErrorMessage className={css.alert} name="name" component="span" />
         </div>
+
         <div>
           <label className={css.formLabel} htmlFor={numberFieldId}>
             Number
@@ -71,6 +79,7 @@ export default function ContactForm({ addContact }) {
             component="span"
           />
         </div>
+
         <button className={css.addBtn} type="submit">
           Add contact
         </button>
